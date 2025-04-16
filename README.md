@@ -12,7 +12,6 @@ MATERIA: Aseguramiento de la Calidad de Software
 | Enzo Mastrangelo       | Dev            | 15/06/2025 | ✔ / ✘     |
 | Santiago Navarro       | Dev            | 15/06/2025 | ✔ / ✘     |
 | Joaquín Piastrellini   | Dev Lead       | 15/06/2025 | ✔ / ✘     |
-| John Doe               | Cliente        | 15/06/2025 | ✔ / ✘     |
 +------------------------+----------------+------------+------------+
 
 ---
