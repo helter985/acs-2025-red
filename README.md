@@ -135,3 +135,17 @@ El propósito de este documento es definir el plan de pruebas para el sistema de
 | TC-08  | Historia 6           | Reemplazar lista anterior     | Lista anterior cargada           | Subir nueva lista                   | Reemplazo sin errores                         |
 | TC-09  | Historia 7           | Subir imagen de producto      | Imagen válida                    | Subir desde panel admin             | Imagen asociada correctamente                 |
 | TC-10  | Historia 8           | Verificar campos requeridos   | Producto incompleto              | Subir lista                         | Advertencia antes de cargar                   |
+
+## 3. Especificaciones 🧠
+
+### 3.1 - Arquitectura
+
+El sistema se basa en una arquitectura cliente-servidor compuesta por los siguientes elementos:
+
+- **Aplicación móvil (Cliente)**: Usada por los vendedores para consultar precios de productos de forma rápida y visual. Se conecta al backend mediante solicitudes HTTP.
+- **Backend (API RESTful)**: Expone los endpoints necesarios para buscar productos, obtener precios, imágenes, y validar la versión de la lista.
+- **Base de datos**: Almacena toda la información de productos, listas de precios, imágenes y metadatos de versiones.
+- **Interfaz Admin (desde navegador o backend)**: Utilizada por el personal de casa central para cargar semanalmente las listas de Excel e imágenes de productos.
+
+#### Diagrama de arquitectura
+
