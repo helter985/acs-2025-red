@@ -149,3 +149,9 @@ El sistema se basa en una arquitectura cliente-servidor compuesta por los siguie
 
 #### Diagrama de arquitectura
 ![diagram](images/arquitectura.jpg)
+
+### 3.2 - Definición de API
+
+El contrato de la API está definido usando el estándar OpenAPI 3.0.
+
+📄 [Ver contrato OpenAPI (openapi.yaml)](./docs/openapi.yaml)
