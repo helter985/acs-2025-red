@@ -148,4 +148,4 @@ El sistema se basa en una arquitectura cliente-servidor compuesta por los siguie
 - **Interfaz Admin (desde navegador o backend)**: Utilizada por el personal de casa central para cargar semanalmente las listas de Excel e imágenes de productos.
 
 #### Diagrama de arquitectura
-
+![diagram](images/arquitectura.jpg)
