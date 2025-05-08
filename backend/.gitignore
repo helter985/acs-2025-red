@@ -1,0 +1,10 @@
+#entorno
+venv
+
+#database
+instance
+
+#pycache
+__pycache__
+*.pyc
+.cache
