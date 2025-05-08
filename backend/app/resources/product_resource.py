@@ -8,13 +8,23 @@ products_schema = ProductSchema(many=True)
 
 @product_bp.route('/products', methods=['GET'])
 def get_all_products():
-    products = product_service.list_products()
-    return jsonify(products_schema.dump(products))
+    try:
+        products = product_service.list_products()
+        if not products:
+            return '', 204 
+        return jsonify(products_schema.dump(products)), 200
+    except Exception as e:
+        return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
 
 @product_bp.route('/product/<int:product_id>', methods=['GET'])
 def get_product(product_id):
-    product = product_service.get_product(product_id)
-    return jsonify(product_schema.dump(product))
+    try:
+        product = product_service.get_product(product_id)
+        if not product:
+            return jsonify({"message": "Product not found"}), 404
+        return jsonify(product_schema.dump(product)), 200
+    except Exception as e:
+        return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
 
 @product_bp.route('/admin/products-list', methods=['POST'])
 def upload_products():
@@ -33,4 +43,5 @@ def upload_products():
             return jsonify({"message": "Invalid file format"}), 400
 
     except Exception as e:
-        return jsonify({"message": "An error occurred", "Internal Error": str(e)}), 500
+        return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
+    
