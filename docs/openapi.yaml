@@ -78,25 +78,6 @@ paths:
         '500':
           description: Error interno
 
-  /version:
-    get:
-      summary: Obtener versión y última actualización
-      responses:
-        '200':
-          description: Datos de la versión
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  fecha_ultima_actualizacion:
-                    type: string
-                    format: date
-                  version:
-                    type: string
-        '500':
-          description: Error interno
-
 components:
   schemas:
     Producto:
