@@ -10,4 +10,4 @@ class Config:
 
 class TestConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost:5432/acs_test_db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost:5432/acs_test_db' 

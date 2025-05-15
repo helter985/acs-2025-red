@@ -26,6 +26,24 @@ def get_product(product_id):
     except Exception as e:
         return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
 
+@product_bp.route('/products', methods=['POST'])
+def create_product():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"message": "No input data provided"}), 400
+
+        # Validate required fields
+        required_fields = ['name', 'price']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"message": f"Missing required field: {field}"}), 400
+
+        product = product_service.create_product(data)
+        return jsonify(product_schema.dump(product)), 201
+    except Exception as e:
+        return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
+
 @product_bp.route('/admin/products-list', methods=['POST'])
 def upload_products():
     try:
