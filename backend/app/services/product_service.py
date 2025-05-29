@@ -1,24 +1,37 @@
-from ..repositories import product_repository
-from ..models.product_model import Product
-
-def list_products():
-    return product_repository.get_all()
+from app.models import Product, db
+from sqlalchemy.exc import NoResultFound
 
 def get_product(product_id):
-    return product_repository.get_by_id(product_id)
+    try:
+        product = db.session.get(Product, product_id)
+        if product is None:
+            return None
+        return product
+    except Exception as e:
+        db.session.rollback()
+        raise e
+
+def get_all_products():
+    return Product.query.all()
 
 def create_product(data):
-    product = Product(name=data['name'], price=data['price'])
-    return product_repository.save(product)
+    product = Product(**data)
+    db.session.add(product)
+    db.session.commit()
+    return product
 
 def update_product(product_id, data):
     product = get_product(product_id)
-    product.name = data['name']
-    product.price = data['price']
-    product_repository.update()
+    if product:
+        for key, value in data.items():
+            setattr(product, key, value)
+        db.session.commit()
     return product
 
 def delete_product(product_id):
     product = get_product(product_id)
-    product_repository.delete(product)
-    return True
+    if product:
+        db.session.delete(product)
+        db.session.commit()
+        return True
+    return False

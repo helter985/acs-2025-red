@@ -1,5 +1,6 @@
-# This file makes the models directory a Python package 
+from app import db
+from .product_model import Product
+from .user_model import User
+from .task_model import Task
 
-from app.models.product_model import Product
-
-__all__ = ['Product'] 
+__all__ = ['db', 'Product', 'User', 'Task'] 
