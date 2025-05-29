@@ -3,8 +3,11 @@ from ..models.product_model import Product, db
 def get_all():
     return Product.query.all()
 
-def get_by_id(product_id):
-    return Product.query.get_or_404(product_id)
+def get_by_codigo(codigo):
+    return Product.query.filter_by(codigo=codigo).first()
+
+def get_by_nombre(nombre):
+    return Product.query.filter(Product.nombre.ilike(f"%{nombre}%")).all()
 
 def save(product):
     db.session.add(product)

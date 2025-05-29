@@ -11,15 +11,15 @@ def get_all_products():
     try:
         products = product_service.list_products()
         if not products:
-            return '', 204 
+            return '', 204
         return jsonify(products_schema.dump(products)), 200
     except Exception as e:
         return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
 
-@product_bp.route('/product/<int:product_id>', methods=['GET'])
-def get_product(product_id):
+@product_bp.route('/products/<string:codigo>', methods=['GET'])
+def get_product(codigo):
     try:
-        product = product_service.get_product(product_id)
+        product = product_service.get_product(codigo)
         if not product:
             return jsonify({"message": "Product not found"}), 404
         return jsonify(product_schema.dump(product)), 200
@@ -34,7 +34,7 @@ def create_product():
             return jsonify({"message": "No input data provided"}), 400
 
         # Validate required fields
-        required_fields = ['name', 'price']
+        required_fields = ['codigo', 'nombre', 'precio']
         for field in required_fields:
             if field not in data:
                 return jsonify({"message": f"Missing required field: {field}"}), 400
