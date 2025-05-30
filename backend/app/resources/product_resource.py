@@ -1,65 +1,54 @@
 from flask import Blueprint, jsonify, request
 from ..services import product_service
 from ..mapping.product_schema import ProductSchema
+from flask_restful import Resource
+from ..utils.auth import token_required
 
 product_bp = Blueprint('products', __name__)
 product_schema = ProductSchema()
 products_schema = ProductSchema(many=True)
 
-@product_bp.route('/products', methods=['GET'])
-def get_all_products():
-    try:
-        products = product_service.list_products()
-        if not products:
-            return '', 204
-        return jsonify(products_schema.dump(products)), 200
-    except Exception as e:
-        return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
+class ProductResource(Resource):
+    def get(self):
+        try:
+            nombre = request.args.get('nombre')
+            products = product_service.list_products(nombre)
+            
+            if not products:
+                return '', 204
+            
+            # Serializar la lista de productos
+            result = product_schema.dump_many(products)
+            return result, 200
+        except Exception as e:
+            return {'error': str(e)}, 500
 
-@product_bp.route('/products/<string:codigo>', methods=['GET'])
-def get_product(codigo):
-    try:
-        product = product_service.get_product(codigo)
-        if not product:
-            return jsonify({"message": "Product not found"}), 404
-        return jsonify(product_schema.dump(product)), 200
-    except Exception as e:
-        return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
+class ProductByCodeResource(Resource):
+    def get(self, codigo):
+        try:
+            product = product_service.get_product(codigo)
+            if not product:
+                return {'error': 'Producto no encontrado'}, 404
+            
+            result = product_schema.dump(product)
+            return result, 200
+        except Exception as e:
+            return {'error': str(e)}, 500
 
-@product_bp.route('/products', methods=['POST'])
-def create_product():
-    try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"message": "No input data provided"}), 400
-
-        # Validate required fields
-        required_fields = ['codigo', 'nombre', 'precio']
-        for field in required_fields:
-            if field not in data:
-                return jsonify({"message": f"Missing required field: {field}"}), 400
-
-        product = product_service.create_product(data)
-        return jsonify(product_schema.dump(product)), 201
-    except Exception as e:
-        return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
-
-@product_bp.route('/admin/products-list', methods=['POST'])
-def upload_products():
-    try:
-        if not request.headers.get('Authorization'):
-            return jsonify({"message": "Unauthorized"}), 401
-
-        file = request.files.get('file')
-        if not file:
-            return jsonify({"message": "No file uploaded"}), 400
-
-        success = product_service.upload_products(file)
-        if success:
-            return jsonify({"message": "Products uploaded successfully"}), 201
-        else:
-            return jsonify({"message": "Invalid file format"}), 400
-
-    except Exception as e:
-        return jsonify({"message": "An internal error occurred", "Internal Error": str(e)}), 500
+class ListaPreciosResource(Resource):
+    @token_required
+    def post(self):
+        try:
+            if 'archivo' not in request.files:
+                return {'error': 'No se proporcionó ningún archivo'}, 400
+            
+            file = request.files['archivo']
+            if not file.filename.endswith('.xlsx'):
+                return {'error': 'El archivo debe ser de tipo Excel (.xlsx)'}, 400
+            
+            if product_service.upload_products(file):
+                return {'message': 'Lista de precios actualizada correctamente'}, 201
+            return {'error': 'Error al procesar el archivo'}, 500
+        except Exception as e:
+            return {'error': str(e)}, 500
     
