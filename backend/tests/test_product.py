@@ -23,11 +23,13 @@ def generate_text_file():
 
 @patch('app.services.product_service.list_products')
 def test_get_all_products_success(mock_list_products, client):
-    mock_list_products.return_value = [
+    expected_products = [
         {"codigo": "P001", "nombre": "Producto 1", "precio": 100.0, "imagen_url": "http://example.com/img1", "ultima_actualizacion": "2023-01-01"}
     ]
+    mock_list_products.return_value = expected_products
     response = client.get('/api/productos')
     assert response.status_code == 200
+    assert response.json == expected_products
 
 @patch('app.services.product_service.list_products')
 def test_get_all_products_empty(mock_list_products, client):
@@ -45,15 +47,17 @@ def test_get_all_products_error(mock_list_products, client):
 
 @patch('app.services.product_service.get_product')
 def test_get_product_success(mock_get_product, client):
-    mock_get_product.return_value = {
+    expected_product = {
         "codigo": "P001",
         "nombre": "Producto 1",
         "precio": 100.0,
         "imagen_url": "http://example.com/img1",
         "ultima_actualizacion": "2023-01-01"
     }
+    mock_get_product.return_value = expected_product
     response = client.get('/api/productos/P001')
     assert response.status_code == 200
+    assert response.json == expected_product
 
 @patch('app.services.product_service.get_product')
 def test_get_product_not_found(mock_get_product, client):
